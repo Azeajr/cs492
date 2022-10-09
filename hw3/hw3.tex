@@ -1,0 +1,126 @@
+% Preview source code
+
+%% LyX 2.3.6.1 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[english]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{geometry}
+\geometry{verbose,tmargin=1cm,bmargin=1cm,lmargin=1cm,rmargin=1cm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\PassOptionsToPackage{normalem}{ulem}
+\usepackage{ulem}
+\usepackage{babel}
+\begin{document}
+\title{Homework 3}
+\author{Antonio Zea Jr}
+\maketitle
+\begin{abstract}
+\textbf{Description for: CS 492 Homework 3}
+
+Public Key Cryptography
+
+Complete the problems below and submit this word document with the
+solution to the questions here.
+
+\uline{Be sure to show your work related to each problem to receive
+full credit for your answer.}
+\end{abstract}
+
+\section*{Problem 1 (similar, but not identical to book problem 4.21):}
+
+Suppose that for the knapsack cryptosystem, the superincreasing knapsack
+is $(3,5,12,23)$ with $n=47$ and $m=6$
+
+\subsection*{What are the public and private keys?}
+
+Private: SIK $(3,5,12,23)$ $n=47$ and $m=6$
+
+$3\cdot6\mod47=18$
+
+$5\cdot6\mod47=30$
+
+$12\cdot6\mod47=25$
+
+$23\cdot6\mod47=44$\\
+Public: GK $(18,30,25,44)$
+
+\subsection*{Encrypt the message $M=1011$ given in binary. Give your result in
+decimal}
+
+$6^{-1}\mod47$
+
+$\begin{aligned}47=6(7)+5 & \quad\quad5=47-6(7)\\
+6=5(1)+1 & \quad\quad1=6-5(1)
+\end{aligned}
+$$\quad\begin{aligned}1= & 6-5(1)\\
+\quad1= & 6-(47-6(7))\\
+1= & 6(8)-47
+\end{aligned}
+$$\quad\quad\therefore6^{-1}\mod47=8$
+
+$M=1011_{2}\implies11_{10}$
+
+$1\cdot18+0\cdot30+1\cdot25+1\cdot44=87$
+
+\pagebreak{}
+
+\section*{Problem 2 (similar, but not identical to book problem book 4.6):}
+
+Suppose that Alice\textquoteright s RSA public key is $(N,e)=(33,3)$
+and her private key is $d=7$.
+
+\subsection*{If Bob encrypts the message $M=17$ using Alice's public key}
+
+\subsubsection*{What is the ciphertext C?}
+
+Public Key: $(N,e)=(33,3)$\\
+Private Key $d=7$
+
+$M=17$
+
+$\begin{aligned}C= & M^{e}\mod N\\
+= & 17^{3}\mod33=29
+\end{aligned}
+$
+
+\subsubsection*{Show that Alice can decrypt C to obtain M}
+
+$\begin{aligned}M= & C^{d}\mod N\\
+= & 29^{7}\mod33=17
+\end{aligned}
+$
+
+\subsection*{Let S be the result when Alice digitally signs the message $M=23$.}
+
+\subsubsection*{What is $S$?}
+
+$M=23$ and $d=7$
+
+$S=23^{7}\mod33=23$
+
+\subsubsection*{If Bob recieves $M$ and $S$ show how Bob verifies the signature}
+
+$S=23$ and $(N,e)=(33,3)$
+
+$M=23^{3}\mod33=23$
+
+$\therefore$ Alice digitially signed this message
+
+\pagebreak{}
+
+\section*{Problem 3}
+
+Alice and Bob are making a joint will (i.e. M represents the single
+will for both of them). For the final will they want to send a copy
+to their attorney Charlie that only Charlie can read and that shows
+that both Alice and Bob have approved it. Using the notation in the
+slides (same as that in the book). What would be the notation of a
+message that accomplishes this task?
+
+$\{[[M]_{\text{Bob}}]_{\text{Alice}}\}_{\text{Charlie}}$
+
+
+\end{document}
+
