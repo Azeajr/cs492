@@ -1,0 +1,355 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1cm
+\topmargin 1cm
+\rightmargin 1cm
+\bottommargin 1cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Homework 4
+\end_layout
+
+\begin_layout Author
+Antonio Zea Jr
+\end_layout
+
+\begin_layout Section
+Design a secure mutual authentication protocol based on a shared symmetric
+ key.
+ We also want to establish a session key, and we want perfect forward secrecy.
+ Solve for a protocol that can establish this in 2 to 3 messages
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename hw4ques1.png
+	lyxscale 50
+	width 50page%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Consider the following mutual authentication protocol, where 
+\begin_inset Formula $K_{ab}$
+\end_inset
+
+ is a shared symmetric key.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename hw4ques2.png
+	width 50page%
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Give an attack Trudy can use to convince Bob that she is Alice.
+\end_layout
+
+\begin_layout Standard
+Trudy could use a replay attack by sending 
+\begin_inset Quotes eld
+\end_inset
+
+I'm Alice
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Formula $R+1$
+\end_inset
+
+ to Bob he would receive 
+\begin_inset Formula $E(R+1,K_{AB})$
+\end_inset
+
+.
+ He could then send 
+\begin_inset Quotes eld
+\end_inset
+
+I'm Alice
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Formula $R$
+\end_inset
+
+ to Bob after which he would respond to Bob with 
+\begin_inset Formula $E(R+1,K_{ab})$
+\end_inset
+
+.
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Consider the following protocol, where CLNT and SRVR are constants and session
+ key 
+\begin_inset Formula $K=h(S,R_{A},R_{B})$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename hw4ques3.png
+	width 50page%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Does Alice authenticate Bob? Justify your answer
+\begin_inset Newline newline
+\end_inset
+
+Yes, Alice authenticated Bob because she sent 
+\begin_inset Formula $\{S\}_{\text{Bob}}$
+\end_inset
+
+ , which could only be decrypeted by Bob.
+ Bob decrypts this to get 
+\begin_inset Formula $S$
+\end_inset
+
+.
+ Bob then uses the hash of 
+\begin_inset Formula $S,R_{A},R_{B}$
+\end_inset
+
+ to arrive at the session key.
+ He then responds with the encryption of SRVR which only he could do given
+ the need for 
+\begin_inset Formula $S$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Does Bob authenticate Alice? Justify your answer
+\begin_inset Newline newline
+\end_inset
+
+No, Bob does not authenticate Alice because neither of her responses contain
+ anything that only Alice could compute.
+ Trudy could provide their own 
+\begin_inset Formula $S$
+\end_inset
+
+, encrypt it for Bob, they could produce their session key since 
+\begin_inset Formula $R_{A}$
+\end_inset
+
+and 
+\begin_inset Formula $R_{B}$
+\end_inset
+
+ were transmitted in the clear.
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Kerberos
+\end_layout
+
+\begin_layout Enumerate
+Why can Alice not remain anonymous when requesting a TGT from the KDC?
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+A Ticket Granting Ticket acts a users credentials.
+ The KDC needs to know exactly who is making the request for the TGT to
+ correctly provided it.
+ The will TGT contain a session key and Alice's user ID amongst its contents.
+ This is how the KDC maintains the state of Alice's authentication since
+ the KDC is stateless in that the KDC does not maintain which users are
+ logged in to the KDC.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Why can Alice remain anonymous in the sense of not needing to use her private
+ key when requesting a ticket to Bob (what does she use instead and why
+ is this sufficient)?
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The TGT and the authenticator are enough to request a ticket to Bob.
+ The TGT contains Alice's session key and user ID while the authenticator
+ contains a timestamp and Alice's session key.
+ Most of the information the KDC needs is in the TGT while the authenticator
+ helps verify that the communication is fresh.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Why can Alice remain anonymous (not needing her private key) when she sends
+ the “ticket to Bob” to Bob?
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The ticket to Bob contains Alice's user ID and the shared key they will
+ use in their communication.
+ That is enough to for Bob to establish who Alice is and how to comminicate
+ with Alice securely.
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Describe what the confused deputy problem is and what types of authorization
+ approach would be susceptible to it.
+\end_layout
+
+\begin_layout Standard
+The confused deputy problem is a security issue where an entity that doesn't
+ have permission to perform an action can coerce a more priveleged entity
+ to perform the action.
+ Access Control Lists, in particular, are susceptible to this approach.
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Authorization - MLS compartments
+\end_layout
+
+\begin_layout Subsection*
+Draw the full tree and indicate which files Alice and Bob each can read
+ (don’t forget Unclassified)
+\end_layout
+
+\begin_layout Itemize
+Alice has the following clearances TopSecret, Secret{A}, Classified{B}
+\end_layout
+
+\begin_layout Itemize
+Bob has the following clearances TopSecret{A}, Secret{B}
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename hw4ques6.png
+	lyxscale 50
+	width 50page%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Alice can read TopSecret{}, Secret{A}, Secret{}, Classified{A}, Classified{B},
+ Classified{A,B}, Classified{}, Unclassified{A}, Unclassified{B}, Unclassified{A
+,B}, Unclassified{}
+\end_layout
+
+\begin_layout Standard
+Bob can read TopSecret{A}, TopSecret{}, Secret{A}, Secret{B}, Secret{A,B},
+ Secret{}, Classified{A}, Classified{B}, Classified{A,B}, Classified{},
+ Unclassified{A}, Unclassified{B}, Unclassified{A,B}, Unclassified{}
+\end_layout
+
+\end_body
+\end_document
