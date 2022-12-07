@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  patient0:
+    build: ../patient0
+    depends_on:
+      - target
+  target:
+    build: ../target
+    deploy:
+      replicas: 3
