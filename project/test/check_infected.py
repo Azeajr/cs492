@@ -13,7 +13,7 @@ def check_infected(ip_address):
         return False
 
 
-print("Patient0:\t", check_infected("docker-patient0-1"))
-print("Target1:\t", check_infected("docker-target-1"))
-print("Target2:\t", check_infected("docker-target-2"))
-print("Target3:\t", check_infected("docker-target-3"))
+print("Patient0:\t", check_infected("172.16.238.10"))
+print("Target1:\t", check_infected("172.16.238.2"))
+print("Target2:\t", check_infected("172.16.238.3"))
+print("Target3:\t", check_infected("172.16.238.4"))

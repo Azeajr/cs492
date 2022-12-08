@@ -4,7 +4,21 @@ services:
     build: ../patient0
     depends_on:
       - target
+    networks:
+      pentestNetwork:
+        ipv4_address: 172.16.238.10
   target:
     build: ../target
     deploy:
       replicas: 3
+    networks:
+      - pentestNetwork
+networks:
+  pentestNetwork:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
+          gateway: 172.16.238.1
+        
