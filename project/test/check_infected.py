@@ -1,4 +1,8 @@
 import socket
+import time
+import signal
+from rich.live import Live
+from rich.table import Table
 
 
 def check_infected(ip_address):
@@ -13,7 +17,22 @@ def check_infected(ip_address):
         return False
 
 
-print("Patient0:\t", check_infected("172.16.238.10"))
-print("Target1:\t", check_infected("172.16.238.2"))
-print("Target2:\t", check_infected("172.16.238.3"))
-print("Target3:\t", check_infected("172.16.238.4"))
+def generate_table() -> Table:
+    table = Table(show_header=True, header_style="bold magenta")
+    table.add_column("Name", style="dim", width=12)
+    table.add_column("Infected")
+    table.add_row("Patient0\t", str(check_infected("172.16.238.10")))
+    table.add_row("Target1\t", str(check_infected("172.16.238.2")))
+    table.add_row("Target2\t", str(check_infected("172.16.238.3")))
+    table.add_row("Target3\t", str(check_infected("172.16.238.4")))
+
+    return table
+
+
+signal.signal(signal.SIGINT, lambda signal_number, frame: exit(1))
+print("Ctrl-C to exit")
+
+with Live(generate_table(), refresh_per_second=2) as live:
+    while True:
+        time.sleep(0.5)
+        live.update(generate_table())

